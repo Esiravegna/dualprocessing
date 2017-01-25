@@ -26,5 +26,5 @@ For an example of a webservice using the *dualprocessing* module, take a look [h
 # Installation
 
 ```bash
-pip install pip install git+https://github.com/Esiravegna/dualprocessing.git
+pip install git+https://github.com/Esiravegna/dualprocessing.git
 ```
