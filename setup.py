@@ -14,18 +14,20 @@ def get_version():
     raise RuntimeError('Unable to find version string in %s.' % (VERSIONFILE,))
 
 __version__ = get_version()
+REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
 
 setup(
     name = __packagename__,
     packages = [__packagename__], # this must be the same as the name above
     version = __version__,
     description = 'This module is designed to help with running a single-instance, thread-blocking computation pipeline on a second process. It does all the heavy lifting of scheduling calls and asynchronously waiting for the results.',
-    author = 'Michael Osthege',
-    author_email = 'thecakedev@hotmail.com',
-    url = 'https://github.com/michaelosthege/dualprocessing', # use the URL to the github repo
-    download_url = 'https://github.com/michaelosthege/dualprocessing/tarball/%s' % __version__,
+    author = 'Esteban Siravegna, based on works of Michael Osthege',
+    author_email = 'esiravegna@gmail.com',
+    url = 'https://github.com/esiravegna/dualprocessing', # use the URL to the github repo
+    download_url = 'https://github.com/esiravegna/dualprocessing/tarball/%s' % __version__,
     keywords = ['multiprocessing'], # arbitrary keywords
     license = 'MIT',
+    install_requires = REQUIREMENTS,
     classifiers= [
         "Programming Language :: Python",
         "Operating System :: OS Independent",

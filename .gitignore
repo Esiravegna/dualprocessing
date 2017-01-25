@@ -253,3 +253,4 @@ paket-files/
 /MANIFEST
 /dualprocessing/__pycache__
 /dist
+.cache

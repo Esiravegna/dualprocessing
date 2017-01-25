@@ -1,15 +1,15 @@
 from __future__ import absolute_import
 from __future__ import print_function
-
-__version__ = "0.2.3"
-
 from concurrent import futures
 import logging
 from multiprocessing.connection import Pipe
 from multiprocessing import Process
-import time
+from time import sleep
 from sys import exc_info
 from .async_response import AsyncResponse
+
+__version__ = "0.2.3"
+
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,6 @@ class Broker(object):
                 response = AsyncResponse(call.key, False, None, exc_info()[1])
             pipe_end.send((response,))
             # continue looping
-        return True
 
     def submit_call(self, call):
         """
@@ -77,7 +76,7 @@ class Broker(object):
         :param call: (AsyncCall class) the call to be scheduled
         :return: the key parameter as per that class, for a new one.
         """
-        logging.info("{0} scheduled {1}".format(call.Key, call.TargetMethod))
+        logging.info("{0} scheduled {1}".format(call.key, call.target_method))
         # add the key to the queue
         self.__parent_end__.send((call,))
         self.running_tasks.append(call.key)
@@ -98,7 +97,7 @@ class Broker(object):
         :return: a generator yienlding an AsyncResponse. See that class for details
         """
         self.submit_call(call)
-        return self.get_result_async(call.Key)
+        return self.get_result_async(call.key)
 
     def get_result_async(self, key):
         """
@@ -127,7 +126,7 @@ class Broker(object):
         """
         result = None
         while key in self.running_tasks:
-            time.sleep(0.05)
+            sleep(0.05)
         if key in self.finished_tasks:
             result = self.finished_tasks.pop(key)
         return result
@@ -137,7 +136,7 @@ class Broker(object):
         Listens in the background waiting to tasks to be finished
         """
         while True:
-            time.sleep(0.005)
+            sleep(0.005)
             # receive all computations that have finished
             while self.__parent_end__.poll():
                 response, = self.__parent_end__.recv()
