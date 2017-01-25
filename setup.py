@@ -4,7 +4,7 @@ __packagename__ = "dualprocessing"
 
 def get_version():
     import os, re
-    VERSIONFILE = os.path.join(__packagename__, '__init__.py')
+    VERSIONFILE = os.path.join(__packagename__, 'broker.py')
     initfile_lines = open(VERSIONFILE, 'rt').readlines()
     VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
     for line in initfile_lines:
@@ -29,24 +29,8 @@ setup(
     classifiers= [
         "Programming Language :: Python",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 2.7",
         "Intended Audience :: Developers"
     ]
 )
-
-
-########### How to upload
-# In the command line, navigate to the project directory
-# then run
-# >>> python setup.py sdist register -r pypi upload -r pypi
-# or
-# >>> python setup.py sdist register -r pypitest upload -r pypitest
-
-# Make sure to commit with a version-number tag!!
-# >>> git tag [versionnumber]
-# >>> git push --tags
-
-#### References
-# http://peterdowns.com/posts/first-time-with-pypi.html
 

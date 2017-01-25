@@ -24,8 +24,7 @@ For an example of a webservice using the *dualprocessing* module, take a look [h
 
 
 # Installation
-The package is indexed on Pypi, so you can install it via `pip`:
 
 ```bash
-pip install dualprocessing
+pip install git
 ```
