@@ -62,7 +62,7 @@ class Broker(object):
             # execute the said method on the processor
             response = None
             try:
-                returned = processor.__getattribute__(call.target_method)(*call.args, **call.Kwargs)
+                returned = processor.__getattribute__(call.target_method)(*call.args, **call.kwargs)
                 response = AsyncResponse(call.key, True, returned, None)
             except Exception as e:
                 logger.exception(e)
