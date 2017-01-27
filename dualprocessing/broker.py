@@ -58,7 +58,7 @@ class Broker(object):
             # get input key
             call, = pipe_end.recv()
             # process input synchronously
-            logging.info("{0} processing".format(call.Key))
+            logging.info("{0} processing".format(call.key))
             # execute the said method on the processor
             response = None
             try:
@@ -143,6 +143,6 @@ class Broker(object):
                 self.finished_tasks[response.key] = response
                 self.running_tasks.remove(response.key)
                 if not response.Success:
-                    logging.warning("{0} failed: {1}".format(response.Key, response.Error))
+                    logging.warning("{0} failed: {1}".format(response.key, response.Error))
                 else:
-                    logging.info("{0} completed".format(response.Key))
+                    logging.info("{0} completed".format(response.key))
