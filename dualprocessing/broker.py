@@ -4,14 +4,16 @@ from concurrent import futures
 import logging
 from multiprocessing.connection import Pipe
 from multiprocessing import Process
+from os import getenv
 from time import sleep
 from sys import exc_info
 from .async_response import AsyncResponse
 
 __version__ = "0.2.3"
 
-
+log_level = getenv('LOG_LEVEL', 'ERROR')
 logger = logging.getLogger(__name__)
+logger.setLevel(log_level.upper())
 
 
 class Broker(object):
@@ -52,13 +54,13 @@ class Broker(object):
         logging.info("Broker: initializing...")
         # we're now on the second process, so we can create the processor
         processor = processor_constructor(*pc_args, **pc_kwargs)
-        logging.info("Broker: initialization completed")
+        logger.info("Broker: initialization completed")
         # endlessly loop
         while True:
             # get input key
             call, = pipe_end.recv()
             # process input synchronously
-            logging.info("{0} processing".format(call.key))
+            logger.info("{0} processing".format(call.key))
             # execute the said method on the processor
             response = None
             try:
@@ -76,7 +78,7 @@ class Broker(object):
         :param call: (AsyncCall class) the call to be scheduled
         :return: the key parameter as per that class, for a new one.
         """
-        logging.info("{0} scheduled {1}".format(call.key, call.target_method))
+        logger.info("{0} scheduled {1}".format(call.key, call.target_method))
         # add the key to the queue
         self.__parent_end__.send((call,))
         self.running_tasks.append(call.key)
@@ -143,6 +145,6 @@ class Broker(object):
                 self.finished_tasks[response.key] = response
                 self.running_tasks.remove(response.key)
                 if not response.Success:
-                    logging.warning("{0} failed: {1}".format(response.key, response.Error))
+                    logger.warning("{0} failed: {1}".format(response.key, response.Error))
                 else:
-                    logging.info("{0} completed".format(response.key))
+                    logger.info("{0} completed".format(response.key))
