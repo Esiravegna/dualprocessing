@@ -47,7 +47,7 @@ class Broker(object):
         Sends return values of executed calls back through the pipe.
 
         :param pipe_end: (multiprocessing.connection.Pipe) child end of the pipe connection to the broker process
-        :param processor_constructor (function): the computate pipeline constructor
+        :param processor_constructor (function): the compute pipeline constructor
         :param pc_args (list): an *args for the processor_constructor
         :param pc_kwargs (dict): a **kwargs for the processor_constructor
         """
@@ -66,15 +66,17 @@ class Broker(object):
             try:
                 returned = processor.__getattribute__(call.target_method)(*call.args, **call.kwargs)
                 response = AsyncResponse(call.key, True, returned, None)
+                logger.debug('response for key {}:{}'.format(call.key, response))
             except Exception as e:
                 logger.exception(e)
                 response = AsyncResponse(call.key, False, None, exc_info()[1])
-            pipe_end.send((response,))
+            logger.debug("response from sending response {} to key {}: {}".format(
+                response, call.key, pipe_end.send((response,))))
             # continue looping
 
     def submit_call(self, call):
         """
-        Submits a call
+            Submits a call
         :param call: (AsyncCall class) the call to be scheduled
         :return: the key parameter as per that class, for a new one.
         """
@@ -93,7 +95,7 @@ class Broker(object):
         def myfunc():
             call = broker.AsyncCall("uppercase", text="blabla")
             asyncResponse = yield a_broker.submit_call_async(call)
-            print(asyncResponse.sucess)
+            print(asyncResponse.success)
             print(asyncResponse.result)
         :param call: (AsyncCall class) the call to be scheduled
         :return: a generator yienlding an AsyncResponse. See that class for details
@@ -144,7 +146,7 @@ class Broker(object):
                 response, = self.__parent_end__.recv()
                 self.finished_tasks[response.key] = response
                 self.running_tasks.remove(response.key)
-                if not response.Success:
-                    logger.warning("{0} failed: {1}".format(response.key, response.Error))
+                if not response.success:
+                    logger.warning("{0} failed: {1}".format(response.key, response.error))
                 else:
                     logger.info("{0} completed".format(response.key))
