@@ -254,3 +254,4 @@ paket-files/
 /dualprocessing/__pycache__
 /dist
 .cache
+*.pyc
