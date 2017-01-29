@@ -8,7 +8,7 @@ from os import getenv
 from time import sleep
 from sys import exc_info
 from .async_response import AsyncResponse
-
+from .howlong import HowLong
 __version__ = "0.2.3"
 
 log_level = getenv('LOG_LEVEL', 'ERROR')
@@ -52,9 +52,12 @@ class Broker(object):
         :param pc_kwargs (dict): a **kwargs for the processor_constructor
         """
         logging.info("Broker: initializing...")
+        constructor_time = HowLong()
         # we're now on the second process, so we can create the processor
         processor = processor_constructor(*pc_args, **pc_kwargs)
+        const_time = constructor_time.timeit()
         logger.info("Broker: initialization completed")
+        logger.debug("Took {} s".format(const_time))
         # endlessly loop
         while True:
             # get input key

@@ -255,3 +255,4 @@ paket-files/
 /dist
 .cache
 *.pyc
+tests/__pycache__/
